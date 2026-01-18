@@ -93,7 +93,7 @@ export default function BuyNow() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b pt-24 from-blue-50 to-blue-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-b py-40 md:pt-24 from-blue-50 to-blue-100 flex items-center justify-center p-4">
       <form
         className="bg-white shadow-xl rounded-2xl p-8 max-w-lg w-full space-y-6"
         onSubmit={handleSubmit}
