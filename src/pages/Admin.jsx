@@ -268,7 +268,12 @@ export default function Admin() {
                     {order.sunglasses ? "Yes" : "No"}
                   </td>
                   <td className="px-4 py-3">{order?.package}</td>
-                  <td className="px-4 py-3">{order?.transactionId}</td>
+                  <td className="px-4 py-3">
+                    <div className="flex flex-col font-bold items-center gap-4">
+                      <span>{order?.transactionId}</span>
+                      <span>{order?.bKashNumber}</span>
+                    </div>
+                  </td>
                   <td className="px-4 py-3">{order.totalAmount} BDT</td>
                   <td className="px-4 py-3">
                     <select
