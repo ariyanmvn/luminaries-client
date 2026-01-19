@@ -24,6 +24,7 @@ export default function Admin() {
     transactionId: "",
     sunglasses: false,
     totalAmount: "",
+    dressType: "",
     status: "pending",
     package: "",
   });
@@ -238,6 +239,7 @@ export default function Admin() {
                 {[
                   "Name",
                   "Email",
+                   "Dress-Type",
                   "T-shirt Size",
                   "Sunglasses",
                   "Package",
@@ -263,6 +265,7 @@ export default function Admin() {
                 >
                   <td className="px-4 py-3">{order.name}</td>
                   <td className="px-4 py-3">{order.email}</td>
+                  <td className="px-4 py-3">{order?.dressType}</td>
                   <td className="px-4 py-3">{order.tshirtSize}</td>
                   <td className="px-4 py-3">
                     {order.sunglasses ? "Yes" : "No"}
@@ -370,6 +373,24 @@ export default function Admin() {
                   required
                   className="input"
                 />
+              </div>
+
+              <div className="flex flex-col">
+                <label className="text-gray-700 font-semibold mb-1">
+                  Dress Type
+                </label>
+                <select
+                  name="dressType"
+                  value={newOrder.dressType}
+                  onChange={handleChange}
+                  required
+                  className="border border-gray-300 rounded-lg p-3"
+                  disabled={loading}
+                >
+                  <option value="">Select</option>
+                  <option value="T-Shirt (Boys)">T-Shirt (Boys)</option>
+                  <option value="Shirt (Girls)">Shirt (Girls)</option>
+                </select>
               </div>
 
               {/* Tshirt & Package */}

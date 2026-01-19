@@ -10,6 +10,7 @@ export default function BuyNow() {
     name: "",
     email: "",
     tshirtSize: "",
+    dressType: "", // ✅ added
     bKashNumber: "",
     transactionId: "",
     sunglasses: false,
@@ -51,7 +52,6 @@ export default function BuyNow() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // ✅ BD number validation
     const bdNumberRegex = /^01[3-9]\d{8}$/;
     if (!bdNumberRegex.test(formData.bKashNumber)) {
       toast.error("Please enter a valid Bangladeshi bKash number");
@@ -66,7 +66,7 @@ export default function BuyNow() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData), // ✅ dressType sent
       });
 
       const data = await response.json();
@@ -81,6 +81,7 @@ export default function BuyNow() {
           name: "",
           email: "",
           tshirtSize: "",
+          dressType: "",
           bKashNumber: "",
           transactionId: "",
           sunglasses: false,
@@ -113,11 +114,10 @@ export default function BuyNow() {
           <input
             type="text"
             name="name"
-            placeholder="Enter your official name"
             value={formData.name}
             onChange={handleChange}
             required
-            className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800"
+            className="border border-gray-300 rounded-lg p-3"
             disabled={loading}
           />
         </div>
@@ -129,11 +129,29 @@ export default function BuyNow() {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="Enter your email"
             required
-            className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800"
+            className="border border-gray-300 rounded-lg p-3"
             disabled={loading}
           />
+        </div>
+
+        {/* ✅ Dress Type */}
+        <div className="flex flex-col">
+          <label className="text-gray-700 font-semibold mb-1">
+            Dress Type
+          </label>
+          <select
+            name="dressType"
+            value={formData.dressType}
+            onChange={handleChange}
+            required
+            className="border border-gray-300 rounded-lg p-3"
+            disabled={loading}
+          >
+            <option value="">Select</option>
+            <option value="T-Shirt (Boys)">T-Shirt (Boys)</option>
+            <option value="Shirt (Girls)">Shirt (Girls)</option>
+          </select>
         </div>
 
         <div className="flex flex-col">
@@ -145,7 +163,7 @@ export default function BuyNow() {
             value={formData.tshirtSize}
             onChange={handleChange}
             required
-            className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800"
+            className="border border-gray-300 rounded-lg p-3"
             disabled={loading}
           >
             <option value="">Select size</option>
@@ -163,59 +181,48 @@ export default function BuyNow() {
             name="sunglasses"
             checked={formData.sunglasses}
             onChange={handleChange}
-            className="w-5 h-5 text-blue-500 rounded focus:ring-2 focus:ring-blue-400"
             disabled={loading}
           />
-          <span className="text-gray-700 font-medium">
-            Add Sunglasses (+300 BDT)
-          </span>
+          <span>Add Sunglasses (+300 BDT)</span>
         </label>
 
         <p className="text-xl font-bold text-blue-500 text-right">
           Total: {formData.totalAmount} BDT
         </p>
 
-        <div className="flex flex-col bg-blue-50 p-4 rounded-xl border border-blue-200">
+        <div className="flex flex-col bg-blue-50 p-4 rounded-xl">
           <p className="font-semibold text-blue-500 mb-2">
             Send money via bKash to:
           </p>
           <p className="font-bold mb-4">01766775067</p>
 
-          <label className="flex flex-col mb-3">
-            Transaction ID
-            <input
-              type="text"
-              placeholder="eg:DAJ79VGCBX"
-              name="transactionId"
-              value={formData.transactionId}
-              onChange={handleChange}
-              required
-              className="border border-gray-300 rounded-lg p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800"
-              disabled={loading}
-            />
-          </label>
+          <input
+            type="text"
+            name="transactionId"
+            placeholder="Transaction ID"
+            value={formData.transactionId}
+            onChange={handleChange}
+            required
+            className="border rounded-lg p-3 mb-3"
+            disabled={loading}
+          />
 
-          <label className="flex flex-col">
-            Number used for bKash
-            <input
-              type="text"
-              name="bKashNumber"
-              placeholder="enter your bkash number here"
-              value={formData.bKashNumber}
-              onChange={handleChange}
-              required
-              className="border border-gray-300 rounded-lg p-3 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800"
-              disabled={loading}
-            />
-          </label>
+          <input
+            type="text"
+            name="bKashNumber"
+            placeholder="bKash number"
+            value={formData.bKashNumber}
+            onChange={handleChange}
+            required
+            className="border rounded-lg p-3"
+            disabled={loading}
+          />
         </div>
 
         <button
           type="submit"
-          className={`w-full cursor-pointer flex justify-center items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold py-3 rounded-xl shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all ${
-            loading ? "cursor-not-allowed opacity-70" : ""
-          }`}
           disabled={loading}
+          className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl"
         >
           {loading ? "Submitting..." : "Submit"}
         </button>
