@@ -301,6 +301,11 @@ export default function Admin() {
               ))}
             </tbody>
           </table>
+
+          {filteredOrders.length === 0 && (
+            <p className="text-center text-gray-500 m-10">No orders found.</p>
+          )}
+
           <div className="flex py-5 justify-center items-center gap-2 mt-6">
             {[...Array(totalPages)].map((_, i) => (
               <button
