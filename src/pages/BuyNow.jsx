@@ -18,9 +18,8 @@ export default function BuyNow() {
     package: `${selectedPackage}`,
   });
 
-  const [loading, setLoading] = useState(false); // <-- loader state
+  const [loading, setLoading] = useState(false);
 
-  // Package prices
   const packagePrices = {
     standard: 1050,
     premium: 1450,
@@ -51,7 +50,15 @@ export default function BuyNow() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // start loader
+
+    // ✅ BD number validation
+    const bdNumberRegex = /^01[3-9]\d{8}$/;
+    if (!bdNumberRegex.test(formData.bKashNumber)) {
+      toast.error("Please enter a valid Bangladeshi bKash number");
+      return;
+    }
+
+    setLoading(true);
 
     try {
       const response = await fetch("https://rag-day.vercel.app/orders", {
@@ -66,11 +73,10 @@ export default function BuyNow() {
 
       if (data.success) {
         toast.success(
-          "Order submitted successfully! Order ID: " + data.orderId,
+          "Order submitted successfully! Order ID: " + data.orderId
         );
         navigate("/redirect");
 
-        // reset form
         setFormData({
           name: "",
           email: "",
@@ -88,7 +94,7 @@ export default function BuyNow() {
       console.error(error);
       toast.error("Something went wrong. Check console.");
     } finally {
-      setLoading(false); // stop loader
+      setLoading(false);
     }
   };
 
@@ -102,7 +108,6 @@ export default function BuyNow() {
           Buy Now - {selectedPackage} Package
         </h1>
 
-        {/* Name */}
         <div className="flex flex-col">
           <label className="text-gray-700 font-semibold mb-1">Name</label>
           <input
@@ -113,11 +118,10 @@ export default function BuyNow() {
             onChange={handleChange}
             required
             className="border border-gray-300 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-400 text-gray-800"
-            disabled={loading} // disable while submitting
+            disabled={loading}
           />
         </div>
 
-        {/* Email */}
         <div className="flex flex-col">
           <label className="text-gray-700 font-semibold mb-1">Email</label>
           <input
@@ -132,7 +136,6 @@ export default function BuyNow() {
           />
         </div>
 
-        {/* T-shirt Size */}
         <div className="flex flex-col">
           <label className="text-gray-700 font-semibold mb-1">
             T-shirt Size
@@ -154,7 +157,6 @@ export default function BuyNow() {
           </select>
         </div>
 
-        {/* Sunglasses */}
         <label className="flex items-center space-x-3">
           <input
             type="checkbox"
@@ -169,12 +171,10 @@ export default function BuyNow() {
           </span>
         </label>
 
-        {/* Total Amount */}
         <p className="text-xl font-bold text-blue-500 text-right">
           Total: {formData.totalAmount} BDT
         </p>
 
-        {/* bKash Info */}
         <div className="flex flex-col bg-blue-50 p-4 rounded-xl border border-blue-200">
           <p className="font-semibold text-blue-500 mb-2">
             Send money via bKash to:
@@ -185,7 +185,7 @@ export default function BuyNow() {
             Transaction ID
             <input
               type="text"
-              placeholder="paste your transaction id here"
+              placeholder="eg:DAJ79VGCBX"
               name="transactionId"
               value={formData.transactionId}
               onChange={handleChange}
@@ -210,36 +210,13 @@ export default function BuyNow() {
           </label>
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           className={`w-full cursor-pointer flex justify-center items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold py-3 rounded-xl shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all ${
             loading ? "cursor-not-allowed opacity-70" : ""
           }`}
-          disabled={loading} // disable while submitting
+          disabled={loading}
         >
-          {loading ? (
-            <svg
-              className="animate-spin h-5 w-5 mr-2 text-white"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <circle
-                className="opacity-25"
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="currentColor"
-                strokeWidth="4"
-              ></circle>
-              <path
-                className="opacity-75"
-                fill="currentColor"
-                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
-              ></path>
-            </svg>
-          ) : null}
           {loading ? "Submitting..." : "Submit"}
         </button>
       </form>

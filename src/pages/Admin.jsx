@@ -241,6 +241,7 @@ export default function Admin() {
                   "T-shirt Size",
                   "Sunglasses",
                   "Package",
+                  "Transaction Id",
                   "Total Amount",
                   "Status",
                   "Actions",
@@ -267,6 +268,7 @@ export default function Admin() {
                     {order.sunglasses ? "Yes" : "No"}
                   </td>
                   <td className="px-4 py-3">{order?.package}</td>
+                  <td className="px-4 py-3">{order?.transactionId}</td>
                   <td className="px-4 py-3">{order.totalAmount} BDT</td>
                   <td className="px-4 py-3">
                     <select
