@@ -213,7 +213,7 @@ export default function BuyNow() {
         {/* Submit Button */}
         <button
           type="submit"
-          className={`w-full flex justify-center items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold py-3 rounded-xl shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all ${
+          className={`w-full cursor-pointer flex justify-center items-center bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold py-3 rounded-xl shadow-lg hover:from-blue-600 hover:to-blue-700 transition-all ${
             loading ? "cursor-not-allowed opacity-70" : ""
           }`}
           disabled={loading} // disable while submitting

@@ -9,6 +9,13 @@ export default function Admin() {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalLoading, setModalLoading] = useState(false);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+
+  // 📄 Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const ordersPerPage = 10;
+
   const [newOrder, setNewOrder] = useState({
     name: "",
     email: "",
@@ -88,9 +95,12 @@ export default function Admin() {
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`https://rag-day.vercel.app/orders/${orderId}`, {
-          method: "DELETE",
-        });
+        const res = await fetch(
+          `https://rag-day.vercel.app/orders/${orderId}`,
+          {
+            method: "DELETE",
+          },
+        );
         const data = await res.json();
         if (res.ok && data.success) {
           toast.success("Order deleted!");
@@ -154,6 +164,26 @@ export default function Admin() {
     }
   };
 
+  const filteredOrders = orders.filter((order) => {
+    const matchesSearch =
+      order.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      order.email.toLowerCase().includes(searchTerm.toLowerCase());
+
+    const matchesStatus =
+      statusFilter === "all" || order.status === statusFilter;
+
+    return matchesSearch && matchesStatus;
+  });
+  const indexOfLastOrder = currentPage * ordersPerPage;
+  const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
+
+  const paginatedOrders = filteredOrders.slice(
+    indexOfFirstOrder,
+    indexOfLastOrder,
+  );
+
+  const totalPages = Math.ceil(filteredOrders.length / ordersPerPage);
+
   return (
     <div className="p-6 bg-gray-50 min-h-screen pb-12 pt-32">
       <div className="flex justify-between items-center mb-6">
@@ -175,6 +205,33 @@ export default function Admin() {
         <p className="text-center text-gray-500 mt-10">No orders found.</p>
       ) : (
         <div className="overflow-x-auto shadow-lg rounded-xl bg-white">
+          <div className="flex flex-col md:flex-row gap-4 mb-4">
+            <input
+              type="text"
+              placeholder="Search by name or email"
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="border-2 rounded-xl px-4 py-2 w-full md:w-1/2"
+            />
+
+            <select
+              value={statusFilter}
+              onChange={(e) => {
+                setStatusFilter(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="border-2 rounded-xl px-4 py-2 w-full md:w-1/4"
+            >
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-blue-100">
               <tr>
@@ -198,7 +255,7 @@ export default function Admin() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {orders.map((order) => (
+              {paginatedOrders.map((order) => (
                 <tr
                   key={order._id}
                   className="hover:bg-gray-50 transition-colors duration-200"
@@ -244,6 +301,21 @@ export default function Admin() {
               ))}
             </tbody>
           </table>
+          <div className="flex py-5 justify-center items-center gap-2 mt-6">
+            {[...Array(totalPages)].map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentPage(i + 1)}
+                className={`px-3 py-1 cursor-pointer rounded ${
+                  currentPage === i + 1
+                    ? "bg-blue-600 text-white"
+                    : "bg-gray-200"
+                }`}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
